@@ -1,46 +1,229 @@
-# 💰 FinTrac
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTrac</title>
 
-A modern personal finance tracker.
+<style>
 
-## 🚀 About
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+}
 
-FinTrac is a personal finance application that helps users:
+body{
 
-- 💰 Track income and expenses
-- 📊 Analyze spending
-- 🎯 Save money for goals
-- 🏆 Earn achievements
-- 🤖 Get AI financial tips
-- 🌍 Support multiple languages
+background:#0f172a;
+color:white;
 
-## 🌍 Languages
+}
 
-- 🇷🇺 Russian
-- 🇰🇿 Kazakh
-- 🇬🇧 English
-- 🇹🇷 Turkish
+header{
 
-## 📌 Status
+padding:25px;
 
-🚧 Project in development
-Version: 0.1
+display:flex;
+justify-content:space-between;
+align-items:center;
 
-## 🛣️ Roadmap
+}
 
-### ✅ Version 1.0
-- Modern UI
-- Income & Expenses
-- Categories
-- Dark Theme
+.logo{
 
-### 🔜 Version 2.0
-- Goals
-- Emotional Purchases
-- Statistics
-- Charts
+font-size:32px;
+font-weight:bold;
 
-### 🔮 Version 3.0
-- AI Assistant
-- Achievements
-- Budget Planner
-- Multi-language
+}
+
+.balance{
+
+margin:20px;
+
+background:linear-gradient(135deg,#2563eb,#4f46e5);
+
+padding:25px;
+
+border-radius:25px;
+
+}
+
+.balance h2{
+
+font-size:18px;
+opacity:.8;
+
+}
+
+.balance h1{
+
+margin-top:10px;
+
+font-size:42px;
+
+}
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+
+gap:15px;
+
+padding:20px;
+
+}
+
+.card{
+
+background:#1e293b;
+
+padding:20px;
+
+border-radius:20px;
+
+}
+
+.card h3{
+
+font-size:16px;
+
+opacity:.7;
+
+margin-bottom:10px;
+
+}
+
+.card p{
+
+font-size:28px;
+
+font-weight:bold;
+
+}
+
+.graph{
+
+margin:20px;
+
+background:#1e293b;
+
+padding:20px;
+
+border-radius:20px;
+
+height:180px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:60px;
+
+}
+
+.bottom{
+
+position:fixed;
+
+bottom:0;
+
+left:0;
+
+width:100%;
+
+background:#111827;
+
+display:flex;
+
+justify-content:space-around;
+
+padding:18px;
+
+font-size:14px;
+
+}
+
+.bottom div{
+
+text-align:center;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+💰 FinTrac
+
+</div>
+
+<div>
+
+🌍
+
+</div>
+
+</header>
+
+<div class="balance">
+
+<h2>Общий баланс</h2>
+
+<h1>0 ₸</h1>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>🟢 Обязательные</h3>
+
+<p>0</p>
+
+</div>
+
+<div class="card">
+
+<h3>🔴 Эмоциональные</h3>
+
+<p>0 / 10</p>
+
+</div>
+
+</div>
+
+<div class="graph">
+
+📈
+
+</div>
+
+<div class="bottom">
+
+<div>🏠<br>Главная</div>
+
+<div>💳<br>Операции</div>
+
+<div>🎯<br>Цели</div>
+
+<div>📊<br>Статистика</div>
+
+<div>⚙️<br>Настройки</div>
+
+</div>
+
+</body>
+</html>
