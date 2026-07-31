@@ -27,12 +27,12 @@
         background: #121520;
         border-radius: 18px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        max-width: 460px;
+        max-width: 520px;
         width: 100%;
         padding: 20px 22px 24px;
       }
 
-      .app-header {
+      .top-bar {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -55,14 +55,22 @@
         margin-top: 4px;
       }
 
-      .period {
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 180px;
+      }
+
+      .period,
+      .settings {
         background: #181b2b;
         border-radius: 12px;
         padding: 8px 10px;
         border: 1px solid rgba(255, 255, 255, 0.06);
       }
 
-      .period-label {
+      .panel-label {
         font-size: 11px;
         color: #a3a7c4;
         margin-bottom: 4px;
@@ -85,6 +93,34 @@
       }
 
       .period select:focus {
+        border-color: #4c9aff;
+        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
+      }
+
+      .settings-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .settings-row span {
+        font-size: 11px;
+        color: #a3a7c4;
+      }
+
+      .settings-row input {
+        width: 60px;
+        background: #121520;
+        border-radius: 8px;
+        border: 1px solid #262a3f;
+        padding: 4px 6px;
+        font-size: 12px;
+        color: #fff;
+        outline: none;
+        text-align: center;
+      }
+
+      .settings-row input:focus {
         border-color: #4c9aff;
         box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
       }
@@ -211,6 +247,47 @@
         color: #ff6b81;
       }
 
+      .expense-kind-toggle {
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #121520;
+        border-radius: 8px;
+        border: 1px solid #262a3f;
+        padding: 6px 6px 6px 10px;
+      }
+
+      .expense-kind-label {
+        font-size: 11px;
+        color: #a3a7c4;
+      }
+
+      .expense-kind-buttons {
+        display: flex;
+        gap: 4px;
+      }
+
+      .expense-kind-btn {
+        border: none;
+        border-radius: 20px;
+        padding: 4px 8px;
+        font-size: 11px;
+        cursor: pointer;
+        background: transparent;
+        color: #a3a7c4;
+      }
+
+      .expense-kind-btn.emotional.active {
+        background: rgba(255, 107, 129, 0.15);
+        color: #ff6b81;
+      }
+
+      .expense-kind-btn.essential.active {
+        background: rgba(58, 210, 159, 0.15);
+        color: #3ad29f;
+      }
+
       .actions {
         display: flex;
         justify-content: flex-end;
@@ -300,11 +377,42 @@
         color: #ff6b81;
       }
 
+      .item-tag {
+        font-size: 10px;
+        border-radius: 999px;
+        padding: 2px 8px;
+        margin-left: 6px;
+      }
+
+      .item-tag.emotional {
+        background: rgba(255, 107, 129, 0.15);
+        color: #ff9aa5;
+      }
+
+      .item-tag.essential {
+        background: rgba(58, 210, 159, 0.15);
+        color: #7be3bd;
+      }
+
       .empty-state {
         font-size: 12px;
         color: #8c90b0;
         text-align: center;
         padding: 10px 4px;
+      }
+
+      @media (max-width: 520px) {
+        .top-bar {
+          flex-direction: column;
+        }
+
+        .right-panel {
+          flex-direction: row;
+        }
+
+        .app {
+          max-width: 100%;
+        }
       }
 
       @media (max-width: 480px) {
@@ -318,13 +426,17 @@
           align-items: flex-start;
           justify-content: center;
         }
+
+        .right-panel {
+          flex-direction: column;
+        }
       }
     </style>
   </head>
 
   <body>
     <div class="app">
-      <header class="app-header">
+      <div class="top-bar">
         <div class="app-title-block">
           <div class="app-title">Finance Tracker</div>
           <div class="app-subtitle">
@@ -332,31 +444,46 @@
           </div>
         </div>
 
-        <div class="period">
-          <div class="period-label">Report month</div>
-          <div class="period-row">
-            <select id="monthSelect">
-              <option value="1">Jan</option>
-              <option value="2">Feb</option>
-              <option value="3">Mar</option>
-              <option value="4">Apr</option>
-              <option value="5">May</option>
-              <option value="6">Jun</option>
-              <option value="7">Jul</option>
-              <option value="8">Aug</option>
-              <option value="9">Sep</option>
-              <option value="10">Oct</option>
-              <option value="11">Nov</option>
-              <option value="12">Dec</option>
-            </select>
-            <select id="yearSelect">
-              <option value="2025">2025</option>
-              <option value="2026" selected>2026</option>
-              <option value="2027">2027</option>
-            </select>
+        <div class="right-panel">
+          <div class="period">
+            <div class="panel-label">Report month</div>
+            <div class="period-row">
+              <select id="monthSelect">
+                <option value="1">Jan</option>
+                <option value="2">Feb</option>
+                <option value="3">Mar</option>
+                <option value="4">Apr</option>
+                <option value="5">May</option>
+                <option value="6">Jun</option>
+                <option value="7">Jul</option>
+                <option value="8">Aug</option>
+                <option value="9">Sep</option>
+                <option value="10">Oct</option>
+                <option value="11">Nov</option>
+                <option value="12">Dec</option>
+              </select>
+              <select id="yearSelect">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings">
+            <div class="panel-label">Settings</div>
+            <div class="settings-row">
+              <span>Max emotional:</span>
+              <input
+                id="maxEmotionalInput"
+                type="number"
+                min="0"
+                placeholder="10"
+              />
+            </div>
           </div>
         </div>
-      </header>
+      </div>
 
       <section class="summary">
         <div class="card">
@@ -394,7 +521,7 @@
           <div class="field">
             <label>Type</label>
             <div class="type-toggle">
-              <span class="type-label">Choose</span>
+              <span class="type-label">Income / Expense</span>
               <div class="type-buttons">
                 <button
                   type="button"
@@ -409,6 +536,26 @@
                   id="expenseBtn"
                 >
                   Expense
+                </button>
+              </div>
+            </div>
+
+            <div class="expense-kind-toggle" id="expenseKindBlock">
+              <span class="expense-kind-label">Expense type</span>
+              <div class="expense-kind-buttons">
+                <button
+                  type="button"
+                  class="expense-kind-btn emotional active"
+                  id="emotionalBtn"
+                >
+                  Emotional
+                </button>
+                <button
+                  type="button"
+                  class="expense-kind-btn essential"
+                  id="essentialBtn"
+                >
+                  Essential
                 </button>
               </div>
             </div>
@@ -435,6 +582,7 @@
 
     <script>
       const STORAGE_KEY = "finance-tracker-transactions";
+      const SETTINGS_KEY = "finance-tracker-settings";
 
       const titleInput = document.getElementById("titleInput");
       const amountInput = document.getElementById("amountInput");
@@ -448,126 +596,18 @@
       const countLabel = document.getElementById("countLabel");
       const monthSelect = document.getElementById("monthSelect");
       const yearSelect = document.getElementById("yearSelect");
+      const expenseKindBlock = document.getElementById("expenseKindBlock");
+      const emotionalBtn = document.getElementById("emotionalBtn");
+      const essentialBtn = document.getElementById("essentialBtn");
+      const maxEmotionalInput = document.getElementById("maxEmotionalInput");
 
       let type = "income";
+      let expenseKind = "emotional"; // or "essential"
       let transactions = [];
+      let settings = {
+        maxEmotional: 10,
+      };
 
-      // load from localStorage on start
       function loadFromStorage() {
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            transactions = JSON.parse(raw);
-          } else {
-            transactions = [];
-          }
-        } catch (e) {
-          transactions = [];
-        }
-      }
-
-      function saveToStorage() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
-      }
-
-      incomeBtn.addEventListener("click", () => {
-        type = "income";
-        incomeBtn.classList.add("active", "income");
-        expenseBtn.classList.remove("active", "expense");
-      });
-
-      expenseBtn.addEventListener("click", () => {
-        type = "expense";
-        expenseBtn.classList.add("active", "expense");
-        incomeBtn.classList.remove("active", "income");
-      });
-
-      addBtn.addEventListener("click", () => {
-        const title = titleInput.value.trim();
-        const amount = Number(amountInput.value);
-
-        if (!title || !amount) {
-          alert("Please enter title and amount.");
-          return;
-        }
-
-        const now = new Date();
-        const transaction = {
-          id: Date.now(),
-          title,
-          amount,
-          type,
-          dateString: now.toLocaleDateString(),
-          year: now.getFullYear(),
-          month: now.getMonth() + 1, // 1–12
-        };
-
-        transactions.unshift(transaction);
-        saveToStorage();
-
-        titleInput.value = "";
-        amountInput.value = "";
-        render();
-      });
-
-      monthSelect.addEventListener("change", render);
-      yearSelect.addEventListener("change", render);
-
-      function render() {
-        const selectedMonth = Number(monthSelect.value);
-        const selectedYear = Number(yearSelect.value);
-
-        const filtered = transactions.filter(
-          (t) => t.year === selectedYear && t.month === selectedMonth
-        );
-
-        if (filtered.length === 0) {
-          itemsContainer.innerHTML =
-            '<div class="empty-state">No records in this month yet.</div>';
-        } else {
-          itemsContainer.innerHTML = "";
-          filtered.forEach((t) => {
-            const div = document.createElement("div");
-            div.className = "item";
-            div.innerHTML = `
-              <div class="item-left">
-                <div class="item-title">${t.title}</div>
-                <div class="item-meta">${t.dateString}</div>
-              </div>
-              <div class="item-amount ${
-                t.type === "income" ? "income" : "expense"
-              }">
-                ${t.type === "income" ? "+" : "-"} ${t.amount} ₸
-              </div>
-            `;
-            itemsContainer.appendChild(div);
-          });
-        }
-
-        const incomeTotal = filtered
-          .filter((t) => t.type === "income")
-          .reduce((sum, t) => sum + t.amount, 0);
-        const expenseTotal = filtered
-          .filter((t) => t.type === "expense")
-          .reduce((sum, t) => sum + t.amount, 0);
-        const balance = incomeTotal - expenseTotal;
-
-        incomeEl.textContent = `${incomeTotal} ₸`;
-        expenseEl.textContent = `${expenseTotal} ₸`;
-        balanceEl.textContent = `${balance} ₸`;
-        countLabel.textContent =
-          filtered.length === 1 ? "1 item" : `${filtered.length} items`;
-      }
-
-      // init
-      loadFromStorage();
-
-      // set selects to current month/year
-      const now = new Date();
-      monthSelect.value = String(now.getMonth() + 1);
-      yearSelect.value = String(now.getFullYear());
-
-      render();
-    </script>
-  </body>
-</html>
+          const raw = localStorage.getItem(STORAGE_KEY
