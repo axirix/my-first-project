@@ -1,12 +1,462 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>My First Project</title>
+    <meta charset="UTF-8" />
+    <title>Finance Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+          sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1b1b2f, #162447, #1f4068);
+        color: #fff;
+      }
+
+      .app {
+        background: #121520;
+        border-radius: 18px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        max-width: 420px;
+        width: 100%;
+        padding: 24px 26px 28px;
+      }
+
+      .app-header {
+        margin-bottom: 18px;
+      }
+
+      .app-title {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .app-subtitle {
+        font-size: 13px;
+        color: #b4b9d6;
+        margin-top: 4px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .card {
+        background: #181b2b;
+        border-radius: 12px;
+        padding: 12px 12px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .card-label {
+        font-size: 11px;
+        color: #a3a7c4;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+      }
+
+      .card-value {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .card-value.positive {
+        color: #3ad29f;
+      }
+
+      .card-value.negative {
+        color: #ff6b81;
+      }
+
+      .card-badge {
+        font-size: 10px;
+        color: #8c90b0;
+        margin-top: 4px;
+      }
+
+      .form {
+        margin-top: 22px;
+        background: #181b2b;
+        border-radius: 14px;
+        padding: 14px 14px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .form-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .field {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .field label {
+        font-size: 11px;
+        color: #a3a7c4;
+        margin-bottom: 4px;
+      }
+
+      .field input {
+        background: #121520;
+        border-radius: 8px;
+        border: 1px solid #262a3f;
+        padding: 8px 10px;
+        color: #fff;
+        font-size: 13px;
+        outline: none;
+      }
+
+      .field input:focus {
+        border-color: #4c9aff;
+        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
+      }
+
+      .type-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #121520;
+        border-radius: 8px;
+        border: 1px solid #262a3f;
+        padding: 6px 6px 6px 10px;
+      }
+
+      .type-label {
+        font-size: 11px;
+        color: #a3a7c4;
+      }
+
+      .type-buttons {
+        display: flex;
+        gap: 4px;
+      }
+
+      .type-btn {
+        border: none;
+        border-radius: 20px;
+        padding: 4px 8px;
+        font-size: 11px;
+        cursor: pointer;
+        background: transparent;
+        color: #a3a7c4;
+      }
+
+      .type-btn.active.income {
+        background: rgba(58, 210, 159, 0.15);
+        color: #3ad29f;
+      }
+
+      .type-btn.active.expense {
+        background: rgba(255, 107, 129, 0.15);
+        color: #ff6b81;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 4px;
+      }
+
+      .btn-add {
+        border: none;
+        border-radius: 999px;
+        padding: 7px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        background: linear-gradient(135deg, #4c9aff, #7c5cff);
+        color: #fff;
+        box-shadow: 0 8px 18px rgba(76, 154, 255, 0.4);
+      }
+
+      .btn-add:hover {
+        filter: brightness(1.08);
+      }
+
+      .btn-add:active {
+        transform: translateY(1px);
+        box-shadow: 0 6px 14px rgba(76, 154, 255, 0.45);
+      }
+
+      .list {
+        margin-top: 18px;
+      }
+
+      .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .list-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: #d7dbff;
+      }
+
+      .list-count {
+        font-size: 11px;
+        color: #8c90b0;
+      }
+
+      .items {
+        max-height: 220px;
+        overflow-y: auto;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .item-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .item-title {
+        font-size: 13px;
+      }
+
+      .item-meta {
+        font-size: 11px;
+        color: #8c90b0;
+      }
+
+      .item-amount {
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .item-amount.income {
+        color: #3ad29f;
+      }
+
+      .item-amount.expense {
+        color: #ff6b81;
+      }
+
+      .empty-state {
+        font-size: 12px;
+        color: #8c90b0;
+        text-align: center;
+        padding: 10px 4px;
+      }
+
+      @media (max-width: 480px) {
+        .app {
+          border-radius: 0;
+          max-width: 100%;
+          height: 100vh;
+        }
+
+        body {
+          align-items: flex-start;
+          justify-content: center;
+        }
+      }
+    </style>
   </head>
+
   <body>
-    <h1>Hello, GitHub!</h1>
-    <p>My name is Ariana, I am learning computer engineering.</p>
-    <p>This is my first project on GitHub.</p>
+    <div class="app">
+      <header class="app-header">
+        <div class="app-title">Finance Tracker</div>
+        <div class="app-subtitle">
+          Simple tracker for your income & expenses.
+        </div>
+      </header>
+
+      <section class="summary">
+        <div class="card">
+          <div class="card-label">Balance</div>
+          <div id="balance" class="card-value">0 ₸</div>
+          <div class="card-badge">Income − Expenses</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Income</div>
+          <div id="income" class="card-value positive">0 ₸</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Expenses</div>
+          <div id="expense" class="card-value negative">0 ₸</div>
+        </div>
+      </section>
+
+      <section class="form">
+        <div class="form-row">
+          <div class="field">
+            <label>Title</label>
+            <input
+              id="titleInput"
+              type="text"
+              placeholder="Salary, Coffee, Taxi..."
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Amount</label>
+            <input id="amountInput" type="number" placeholder="0" />
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <div class="type-toggle">
+              <span class="type-label">Choose</span>
+              <div class="type-buttons">
+                <button
+                  type="button"
+                  class="type-btn active income"
+                  id="incomeBtn"
+                >
+                  Income
+                </button>
+                <button
+                  type="button"
+                  class="type-btn expense"
+                  id="expenseBtn"
+                >
+                  Expense
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-add" id="addBtn">Add</button>
+        </div>
+      </section>
+
+      <section class="list">
+        <div class="list-header">
+          <div class="list-title">History</div>
+          <div class="list-count" id="countLabel">0 items</div>
+        </div>
+        <div class="items" id="itemsContainer">
+          <div class="empty-state">
+            No records yet. Add your first income or expense.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const titleInput = document.getElementById("titleInput");
+      const amountInput = document.getElementById("amountInput");
+      const incomeBtn = document.getElementById("incomeBtn");
+      const expenseBtn = document.getElementById("expenseBtn");
+      const addBtn = document.getElementById("addBtn");
+      const itemsContainer = document.getElementById("itemsContainer");
+      const balanceEl = document.getElementById("balance");
+      const incomeEl = document.getElementById("income");
+      const expenseEl = document.getElementById("expense");
+      const countLabel = document.getElementById("countLabel");
+
+      let type = "income";
+      let transactions = [];
+
+      incomeBtn.addEventListener("click", () => {
+        type = "income";
+        incomeBtn.classList.add("active", "income");
+        expenseBtn.classList.remove("active", "expense");
+      });
+
+      expenseBtn.addEventListener("click", () => {
+        type = "expense";
+        expenseBtn.classList.add("active", "expense");
+        incomeBtn.classList.remove("active", "income");
+      });
+
+      addBtn.addEventListener("click", () => {
+        const title = titleInput.value.trim();
+        const amount = Number(amountInput.value);
+
+        if (!title || !amount) {
+          alert("Please enter title and amount.");
+          return;
+        }
+
+        const transaction = {
+          id: Date.now(),
+          title,
+          amount,
+          type,
+          date: new Date().toLocaleDateString(),
+        };
+
+        transactions.unshift(transaction);
+        titleInput.value = "";
+        amountInput.value = "";
+        render();
+      });
+
+      function render() {
+        if (transactions.length === 0) {
+          itemsContainer.innerHTML =
+            '<div class="empty-state">No records yet. Add your first income or expense.</div>';
+        } else {
+          itemsContainer.innerHTML = "";
+          transactions.forEach((t) => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.innerHTML = `
+              <div class="item-left">
+                <div class="item-title">${t.title}</div>
+                <div class="item-meta">${t.date}</div>
+              </div>
+              <div class="item-amount ${
+                t.type === "income" ? "income" : "expense"
+              }">
+                ${t.type === "income" ? "+" : "-"} ${t.amount} ₸
+              </div>
+            `;
+            itemsContainer.appendChild(div);
+          });
+        }
+
+        const incomeTotal = transactions
+          .filter((t) => t.type === "income")
+          .reduce((sum, t) => sum + t.amount, 0);
+        const expenseTotal = transactions
+          .filter((t) => t.type === "expense")
+          .reduce((sum, t) => sum + t.amount, 0);
+        const balance = incomeTotal - expenseTotal;
+
+        incomeEl.textContent = `${incomeTotal} ₸`;
+        expenseEl.textContent = `${expenseTotal} ₸`;
+        balanceEl.textContent = `${balance} ₸`;
+        countLabel.textContent =
+          transactions.length === 1
+            ? "1 item"
+            : `${transactions.length} items`;
+      }
+
+      render();
+    </script>
   </body>
 </html>
