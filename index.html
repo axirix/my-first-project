@@ -27,13 +27,20 @@
         background: #121520;
         border-radius: 18px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        max-width: 420px;
+        max-width: 460px;
         width: 100%;
-        padding: 24px 26px 28px;
+        padding: 20px 22px 24px;
       }
 
       .app-header {
-        margin-bottom: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .app-title-block {
+        margin-bottom: 12px;
       }
 
       .app-title {
@@ -48,11 +55,45 @@
         margin-top: 4px;
       }
 
+      .period {
+        background: #181b2b;
+        border-radius: 12px;
+        padding: 8px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .period-label {
+        font-size: 11px;
+        color: #a3a7c4;
+        margin-bottom: 4px;
+      }
+
+      .period-row {
+        display: flex;
+        gap: 6px;
+      }
+
+      .period select {
+        flex: 1;
+        background: #121520;
+        border-radius: 8px;
+        border: 1px solid #262a3f;
+        padding: 5px 8px;
+        font-size: 12px;
+        color: #fff;
+        outline: none;
+      }
+
+      .period select:focus {
+        border-color: #4c9aff;
+        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
+      }
+
       .summary {
         display: grid;
         grid-template-columns: 1.2fr 1fr 1fr;
         gap: 10px;
-        margin-top: 18px;
+        margin-top: 16px;
       }
 
       .card {
@@ -90,7 +131,7 @@
       }
 
       .form {
-        margin-top: 22px;
+        margin-top: 18px;
         background: #181b2b;
         border-radius: 14px;
         padding: 14px 14px 12px;
@@ -284,9 +325,36 @@
   <body>
     <div class="app">
       <header class="app-header">
-        <div class="app-title">Finance Tracker</div>
-        <div class="app-subtitle">
-          Simple tracker for your income & expenses.
+        <div class="app-title-block">
+          <div class="app-title">Finance Tracker</div>
+          <div class="app-subtitle">
+            Simple tracker for your income & expenses.
+          </div>
+        </div>
+
+        <div class="period">
+          <div class="period-label">Report month</div>
+          <div class="period-row">
+            <select id="monthSelect">
+              <option value="1">Jan</option>
+              <option value="2">Feb</option>
+              <option value="3">Mar</option>
+              <option value="4">Apr</option>
+              <option value="5">May</option>
+              <option value="6">Jun</option>
+              <option value="7">Jul</option>
+              <option value="8">Aug</option>
+              <option value="9">Sep</option>
+              <option value="10">Oct</option>
+              <option value="11">Nov</option>
+              <option value="12">Dec</option>
+            </select>
+            <select id="yearSelect">
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+            </select>
+          </div>
         </div>
       </header>
 
@@ -294,7 +362,7 @@
         <div class="card">
           <div class="card-label">Balance</div>
           <div id="balance" class="card-value">0 ₸</div>
-          <div class="card-badge">Income − Expenses</div>
+          <div class="card-badge">Income − Expenses (selected month)</div>
         </div>
         <div class="card">
           <div class="card-label">Income</div>
@@ -354,7 +422,7 @@
 
       <section class="list">
         <div class="list-header">
-          <div class="list-title">History</div>
+          <div class="list-title">History (selected month)</div>
           <div class="list-count" id="countLabel">0 items</div>
         </div>
         <div class="items" id="itemsContainer">
@@ -366,6 +434,8 @@
     </div>
 
     <script>
+      const STORAGE_KEY = "finance-tracker-transactions";
+
       const titleInput = document.getElementById("titleInput");
       const amountInput = document.getElementById("amountInput");
       const incomeBtn = document.getElementById("incomeBtn");
@@ -376,9 +446,29 @@
       const incomeEl = document.getElementById("income");
       const expenseEl = document.getElementById("expense");
       const countLabel = document.getElementById("countLabel");
+      const monthSelect = document.getElementById("monthSelect");
+      const yearSelect = document.getElementById("yearSelect");
 
       let type = "income";
       let transactions = [];
+
+      // load from localStorage on start
+      function loadFromStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            transactions = JSON.parse(raw);
+          } else {
+            transactions = [];
+          }
+        } catch (e) {
+          transactions = [];
+        }
+      }
+
+      function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+      }
 
       incomeBtn.addEventListener("click", () => {
         type = "income";
@@ -401,33 +491,48 @@
           return;
         }
 
+        const now = new Date();
         const transaction = {
           id: Date.now(),
           title,
           amount,
           type,
-          date: new Date().toLocaleDateString(),
+          dateString: now.toLocaleDateString(),
+          year: now.getFullYear(),
+          month: now.getMonth() + 1, // 1–12
         };
 
         transactions.unshift(transaction);
+        saveToStorage();
+
         titleInput.value = "";
         amountInput.value = "";
         render();
       });
 
+      monthSelect.addEventListener("change", render);
+      yearSelect.addEventListener("change", render);
+
       function render() {
-        if (transactions.length === 0) {
+        const selectedMonth = Number(monthSelect.value);
+        const selectedYear = Number(yearSelect.value);
+
+        const filtered = transactions.filter(
+          (t) => t.year === selectedYear && t.month === selectedMonth
+        );
+
+        if (filtered.length === 0) {
           itemsContainer.innerHTML =
-            '<div class="empty-state">No records yet. Add your first income or expense.</div>';
+            '<div class="empty-state">No records in this month yet.</div>';
         } else {
           itemsContainer.innerHTML = "";
-          transactions.forEach((t) => {
+          filtered.forEach((t) => {
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
               <div class="item-left">
                 <div class="item-title">${t.title}</div>
-                <div class="item-meta">${t.date}</div>
+                <div class="item-meta">${t.dateString}</div>
               </div>
               <div class="item-amount ${
                 t.type === "income" ? "income" : "expense"
@@ -439,10 +544,10 @@
           });
         }
 
-        const incomeTotal = transactions
+        const incomeTotal = filtered
           .filter((t) => t.type === "income")
           .reduce((sum, t) => sum + t.amount, 0);
-        const expenseTotal = transactions
+        const expenseTotal = filtered
           .filter((t) => t.type === "expense")
           .reduce((sum, t) => sum + t.amount, 0);
         const balance = incomeTotal - expenseTotal;
@@ -451,10 +556,16 @@
         expenseEl.textContent = `${expenseTotal} ₸`;
         balanceEl.textContent = `${balance} ₸`;
         countLabel.textContent =
-          transactions.length === 1
-            ? "1 item"
-            : `${transactions.length} items`;
+          filtered.length === 1 ? "1 item" : `${filtered.length} items`;
       }
+
+      // init
+      loadFromStorage();
+
+      // set selects to current month/year
+      const now = new Date();
+      monthSelect.value = String(now.getMonth() + 1);
+      yearSelect.value = String(now.getFullYear());
 
       render();
     </script>
