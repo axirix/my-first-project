@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>Finance Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <style>
       * {
         box-sizing: border-box;
@@ -13,7 +12,6 @@
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
           sans-serif;
       }
-
       body {
         min-height: 100vh;
         display: flex;
@@ -22,66 +20,50 @@
         background: linear-gradient(135deg, #1b1b2f, #162447, #1f4068);
         color: #fff;
       }
-
       .app {
         background: #121520;
         border-radius: 18px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         max-width: 520px;
         width: 100%;
         padding: 20px 22px 24px;
       }
-
       .top-bar {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
         gap: 10px;
       }
-
-      .app-title-block {
-        margin-bottom: 12px;
-      }
-
       .app-title {
         font-size: 22px;
         font-weight: 700;
-        letter-spacing: 0.5px;
       }
-
       .app-subtitle {
         font-size: 13px;
         color: #b4b9d6;
         margin-top: 4px;
       }
-
       .right-panel {
         display: flex;
         flex-direction: column;
         gap: 8px;
         min-width: 180px;
       }
-
-      .period,
-      .settings {
+      .panel {
         background: #181b2b;
         border-radius: 12px;
         padding: 8px 10px;
         border: 1px solid rgba(255, 255, 255, 0.06);
       }
-
       .panel-label {
         font-size: 11px;
         color: #a3a7c4;
         margin-bottom: 4px;
       }
-
-      .period-row {
+      .panel-row {
         display: flex;
         gap: 6px;
       }
-
-      .period select {
+      select,
+      input[type="number"] {
         flex: 1;
         background: #121520;
         border-radius: 8px;
@@ -91,108 +73,61 @@
         color: #fff;
         outline: none;
       }
-
-      .period select:focus {
-        border-color: #4c9aff;
-        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
-      }
-
-      .settings-row {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .settings-row span {
-        font-size: 11px;
-        color: #a3a7c4;
-      }
-
-      .settings-row input {
-        width: 60px;
-        background: #121520;
-        border-radius: 8px;
-        border: 1px solid #262a3f;
-        padding: 4px 6px;
-        font-size: 12px;
-        color: #fff;
-        outline: none;
-        text-align: center;
-      }
-
-      .settings-row input:focus {
-        border-color: #4c9aff;
-        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
-      }
-
       .summary {
         display: grid;
         grid-template-columns: 1.2fr 1fr 1fr;
         gap: 10px;
         margin-top: 16px;
       }
-
       .card {
         background: #181b2b;
         border-radius: 12px;
-        padding: 12px 12px 10px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 12px;
       }
-
       .card-label {
         font-size: 11px;
         color: #a3a7c4;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
         margin-bottom: 8px;
       }
-
       .card-value {
         font-size: 18px;
         font-weight: 600;
       }
-
       .card-value.positive {
         color: #3ad29f;
       }
-
       .card-value.negative {
         color: #ff6b81;
       }
-
       .card-badge {
         font-size: 10px;
         color: #8c90b0;
         margin-top: 4px;
       }
-
       .form {
         margin-top: 18px;
         background: #181b2b;
         border-radius: 14px;
-        padding: 14px 14px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 14px;
       }
-
       .form-row {
         display: flex;
         gap: 10px;
         margin-bottom: 10px;
       }
-
       .field {
         flex: 1;
         display: flex;
         flex-direction: column;
       }
-
       .field label {
         font-size: 11px;
         color: #a3a7c4;
         margin-bottom: 4px;
       }
-
-      .field input {
+      .field input[type="text"],
+      .field input[type="number"] {
         background: #121520;
         border-radius: 8px;
         border: 1px solid #262a3f;
@@ -201,54 +136,8 @@
         font-size: 13px;
         outline: none;
       }
-
-      .field input:focus {
-        border-color: #4c9aff;
-        box-shadow: 0 0 0 1px rgba(76, 154, 255, 0.4);
-      }
-
-      .type-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: #121520;
-        border-radius: 8px;
-        border: 1px solid #262a3f;
-        padding: 6px 6px 6px 10px;
-      }
-
-      .type-label {
-        font-size: 11px;
-        color: #a3a7c4;
-      }
-
-      .type-buttons {
-        display: flex;
-        gap: 4px;
-      }
-
-      .type-btn {
-        border: none;
-        border-radius: 20px;
-        padding: 4px 8px;
-        font-size: 11px;
-        cursor: pointer;
-        background: transparent;
-        color: #a3a7c4;
-      }
-
-      .type-btn.active.income {
-        background: rgba(58, 210, 159, 0.15);
-        color: #3ad29f;
-      }
-
-      .type-btn.active.expense {
-        background: rgba(255, 107, 129, 0.15);
-        color: #ff6b81;
-      }
-
+      .type-toggle,
       .expense-kind-toggle {
-        margin-top: 8px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -256,18 +145,19 @@
         border-radius: 8px;
         border: 1px solid #262a3f;
         padding: 6px 6px 6px 10px;
+        margin-top: 6px;
       }
-
+      .type-label,
       .expense-kind-label {
         font-size: 11px;
         color: #a3a7c4;
       }
-
+      .type-buttons,
       .expense-kind-buttons {
         display: flex;
         gap: 4px;
       }
-
+      .type-btn,
       .expense-kind-btn {
         border: none;
         border-radius: 20px;
@@ -277,23 +167,27 @@
         background: transparent;
         color: #a3a7c4;
       }
-
+      .type-btn.active.income {
+        background: rgba(58, 210, 159, 0.15);
+        color: #3ad29f;
+      }
+      .type-btn.active.expense {
+        background: rgba(255, 107, 129, 0.15);
+        color: #ff6b81;
+      }
       .expense-kind-btn.emotional.active {
         background: rgba(255, 107, 129, 0.15);
         color: #ff6b81;
       }
-
       .expense-kind-btn.essential.active {
         background: rgba(58, 210, 159, 0.15);
         color: #3ad29f;
       }
-
       .actions {
         display: flex;
         justify-content: flex-end;
         margin-top: 4px;
       }
-
       .btn-add {
         border: none;
         border-radius: 999px;
@@ -303,151 +197,90 @@
         cursor: pointer;
         background: linear-gradient(135deg, #4c9aff, #7c5cff);
         color: #fff;
-        box-shadow: 0 8px 18px rgba(76, 154, 255, 0.4);
       }
-
-      .btn-add:hover {
-        filter: brightness(1.08);
-      }
-
-      .btn-add:active {
-        transform: translateY(1px);
-        box-shadow: 0 6px 14px rgba(76, 154, 255, 0.45);
-      }
-
       .list {
         margin-top: 18px;
       }
-
       .list-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
         margin-bottom: 8px;
       }
-
       .list-title {
         font-size: 13px;
         font-weight: 500;
         color: #d7dbff;
       }
-
       .list-count {
         font-size: 11px;
         color: #8c90b0;
       }
-
       .items {
         max-height: 220px;
         overflow-y: auto;
       }
-
       .item {
         display: flex;
-        align-items: center;
         justify-content: space-between;
         padding: 8px 4px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       }
-
       .item-left {
         display: flex;
         flex-direction: column;
       }
-
       .item-title {
         font-size: 13px;
       }
-
       .item-meta {
         font-size: 11px;
         color: #8c90b0;
       }
-
       .item-amount {
         font-size: 13px;
         font-weight: 500;
       }
-
       .item-amount.income {
         color: #3ad29f;
       }
-
       .item-amount.expense {
         color: #ff6b81;
       }
-
       .item-tag {
         font-size: 10px;
         border-radius: 999px;
         padding: 2px 8px;
         margin-left: 6px;
       }
-
       .item-tag.emotional {
         background: rgba(255, 107, 129, 0.15);
         color: #ff9aa5;
       }
-
       .item-tag.essential {
         background: rgba(58, 210, 159, 0.15);
         color: #7be3bd;
       }
-
       .empty-state {
         font-size: 12px;
         color: #8c90b0;
         text-align: center;
         padding: 10px 4px;
       }
-
-      @media (max-width: 520px) {
-        .top-bar {
-          flex-direction: column;
-        }
-
-        .right-panel {
-          flex-direction: row;
-        }
-
-        .app {
-          max-width: 100%;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .app {
-          border-radius: 0;
-          max-width: 100%;
-          height: 100vh;
-        }
-
-        body {
-          align-items: flex-start;
-          justify-content: center;
-        }
-
-        .right-panel {
-          flex-direction: column;
-        }
-      }
     </style>
   </head>
-
   <body>
     <div class="app">
       <div class="top-bar">
-        <div class="app-title-block">
+        <div>
           <div class="app-title">Finance Tracker</div>
           <div class="app-subtitle">
             Simple tracker for your income & expenses.
           </div>
         </div>
-
         <div class="right-panel">
-          <div class="period">
+          <div class="panel">
             <div class="panel-label">Report month</div>
-            <div class="period-row">
+            <div class="panel-row">
               <select id="monthSelect">
                 <option value="1">Jan</option>
                 <option value="2">Feb</option>
@@ -469,17 +302,11 @@
               </select>
             </div>
           </div>
-
-          <div class="settings">
+          <div class="panel">
             <div class="panel-label">Settings</div>
-            <div class="settings-row">
-              <span>Max emotional:</span>
-              <input
-                id="maxEmotionalInput"
-                type="number"
-                min="0"
-                placeholder="10"
-              />
+            <div class="panel-row">
+              <span style="font-size:11px;color:#a3a7c4;">Max emotional:</span>
+              <input id="maxEmotionalInput" type="number" min="0" placeholder="10" />
             </div>
           </div>
         </div>
@@ -505,11 +332,7 @@
         <div class="form-row">
           <div class="field">
             <label>Title</label>
-            <input
-              id="titleInput"
-              type="text"
-              placeholder="Salary, Coffee, Taxi..."
-            />
+            <input id="titleInput" type="text" placeholder="Salary, Coffee, Taxi..." />
           </div>
         </div>
 
@@ -523,18 +346,10 @@
             <div class="type-toggle">
               <span class="type-label">Income / Expense</span>
               <div class="type-buttons">
-                <button
-                  type="button"
-                  class="type-btn active income"
-                  id="incomeBtn"
-                >
+                <button type="button" class="type-btn active income" id="incomeBtn">
                   Income
                 </button>
-                <button
-                  type="button"
-                  class="type-btn expense"
-                  id="expenseBtn"
-                >
+                <button type="button" class="type-btn expense" id="expenseBtn">
                   Expense
                 </button>
               </div>
@@ -602,12 +417,126 @@
       const maxEmotionalInput = document.getElementById("maxEmotionalInput");
 
       let type = "income";
-      let expenseKind = "emotional"; // or "essential"
+      let expenseKind = "emotional";
       let transactions = [];
-      let settings = {
-        maxEmotional: 10,
-      };
+      let settings = { maxEmotional: 10 };
 
       function loadFromStorage() {
         try {
-          const raw = localStorage.getItem(STORAGE_KEY
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) transactions = JSON.parse(raw);
+        } catch (e) {
+          transactions = [];
+        }
+        try {
+          const rawSettings = localStorage.getItem(SETTINGS_KEY);
+          if (rawSettings) settings = JSON.parse(rawSettings);
+        } catch (e) {
+          settings = { maxEmotional: 10 };
+        }
+        maxEmotionalInput.value = settings.maxEmotional;
+      }
+
+      function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+      }
+
+      function saveSettings() {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      }
+
+      incomeBtn.addEventListener("click", () => {
+        type = "income";
+        incomeBtn.classList.add("active", "income");
+        expenseBtn.classList.remove("active", "expense");
+        expenseKindBlock.style.opacity = "0.5";
+      });
+
+      expenseBtn.addEventListener("click", () => {
+        type = "expense";
+        expenseBtn.classList.add("active", "expense");
+        incomeBtn.classList.remove("active", "income");
+        expenseKindBlock.style.opacity = "1";
+      });
+
+      emotionalBtn.addEventListener("click", () => {
+        expenseKind = "emotional";
+        emotionalBtn.classList.add("active");
+        essentialBtn.classList.remove("active");
+      });
+
+      essentialBtn.addEventListener("click", () => {
+        expenseKind = "essential";
+        essentialBtn.classList.add("active");
+        emotionalBtn.classList.remove("active");
+      });
+
+      maxEmotionalInput.addEventListener("change", () => {
+        const val = Number(maxEmotionalInput.value);
+        if (!isNaN(val) && val >= 0) {
+          settings.maxEmotional = val;
+          saveSettings();
+        }
+      });
+
+      addBtn.addEventListener("click", () => {
+        const title = titleInput.value.trim();
+        const amount = Number(amountInput.value);
+        if (!title || !amount) {
+          alert("Please enter title and amount.");
+          return;
+        }
+
+        const now = new Date();
+        const transaction = {
+          id: Date.now(),
+          title,
+          amount,
+          type,
+          expenseKind: type === "expense" ? expenseKind : null,
+          dateString: now.toLocaleDateString(),
+          year: now.getFullYear(),
+          month: now.getMonth() + 1,
+        };
+
+        // Проверка лимита эмоциональных покупок
+        if (
+          transaction.type === "expense" &&
+          transaction.expenseKind === "emotional"
+        ) {
+          const selectedMonth = Number(monthSelect.value);
+          const selectedYear = Number(yearSelect.value);
+          const emotionalCount = transactions.filter(
+            (t) =>
+              t.year === selectedYear &&
+              t.month === selectedMonth &&
+              t.type === "expense" &&
+              t.expenseKind === "emotional"
+          ).length;
+
+          if (emotionalCount >= settings.maxEmotional) {
+            const proceed = confirm(
+              `You already have ${emotionalCount} emotional purchases in this month.\nLimit is ${settings.maxEmotional}.\nAre you sure you want to add another?`
+            );
+            if (!proceed) {
+              return;
+            }
+          }
+        }
+
+        transactions.unshift(transaction);
+        saveToStorage();
+
+        titleInput.value = "";
+        amountInput.value = "";
+        render();
+      });
+
+      monthSelect.addEventListener("change", render);
+      yearSelect.addEventListener("change", render);
+
+      function render() {
+        const selectedMonth = Number(monthSelect.value);
+        const selectedYear = Number(yearSelect.value);
+        const filtered = transactions.filter(
+          (t) => t.year
