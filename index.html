@@ -133,7 +133,8 @@
         margin-bottom: 4px;
       }
       .field input[type="text"],
-      .field input[type="number"] {
+      .field input[type="number"],
+      .field select {
         background: #121520;
         border-radius: 8px;
         border: 1px solid #262a3f;
@@ -333,6 +334,17 @@
             <input id="amountInput" type="number" placeholder="0" />
           </div>
           <div class="field">
+            <label id="categoryFieldLabel">Category</label>
+            <select id="categorySelect">
+              <option value="general">General</option>
+              <option value="food">Food</option>
+              <option value="transport">Transport</option>
+              <option value="education">Education</option>
+              <option value="entertainment">Entertainment</option>
+              <option value="health">Health</option>
+            </select>
+          </div>
+          <div class="field">
             <label id="typeFieldLabel">Type</label>
             <div class="type-toggle">
               <span id="typeToggleLabel" class="type-label">
@@ -384,6 +396,7 @@
 
       const titleInput = document.getElementById("titleInput");
       const amountInput = document.getElementById("amountInput");
+      const categorySelect = document.getElementById("categorySelect");
       const incomeBtn = document.getElementById("incomeBtn");
       const expenseBtn = document.getElementById("expenseBtn");
       const addBtn = document.getElementById("addBtn");
@@ -407,6 +420,7 @@
       const expenseLabelText = document.getElementById("expenseLabel");
       const titleFieldLabel = document.getElementById("titleFieldLabel");
       const amountFieldLabel = document.getElementById("amountFieldLabel");
+      const categoryFieldLabel = document.getElementById("categoryFieldLabel");
       const typeFieldLabel = document.getElementById("typeFieldLabel");
       const typeToggleLabel = document.getElementById("typeToggleLabel");
       const historyTitle = document.getElementById("historyTitle");
@@ -430,6 +444,7 @@
           expenses: "Expenses",
           titleField: "Title",
           amountField: "Amount",
+          categoryField: "Category",
           typeField: "Type",
           typeToggle: "Income / Expense",
           incomeBtn: "Income",
@@ -441,6 +456,14 @@
           itemsMany: "items",
           emptyState: "No records yet. Add your first income or expense.",
           alertMissing: "Please enter title and amount.",
+          categoryNames: {
+            general: "General",
+            food: "Food",
+            transport: "Transport",
+            education: "Education",
+            entertainment: "Entertainment",
+            health: "Health",
+          },
         },
         ru: {
           title: "Финансовый трекер",
@@ -453,6 +476,7 @@
           expenses: "Расходы",
           titleField: "Название",
           amountField: "Сумма",
+          categoryField: "Категория",
           typeField: "Тип",
           typeToggle: "Доход / Расход",
           incomeBtn: "Доход",
@@ -464,6 +488,14 @@
           itemsMany: "операций",
           emptyState: "Пока нет записей. Добавьте первую операцию.",
           alertMissing: "Введите название и сумму.",
+          categoryNames: {
+            general: "Общее",
+            food: "Еда",
+            transport: "Транспорт",
+            education: "Учёба",
+            entertainment: "Развлечения",
+            health: "Здоровье",
+          },
         },
         kz: {
           title: "Қаржы трэкері",
@@ -476,6 +508,7 @@
           expenses: "Шығын",
           titleField: "Атауы",
           amountField: "Сома",
+          categoryField: "Санат",
           typeField: "Түрі",
           typeToggle: "Кіріс / Шығын",
           incomeBtn: "Кіріс",
@@ -487,6 +520,14 @@
           itemsMany: "операция",
           emptyState: "Әзірге жазбалар жоқ. Бірінші операцияны қосыңыз.",
           alertMissing: "Атауды және соманы енгізіңіз.",
+          categoryNames: {
+            general: "Жалпы",
+            food: "Тамақ",
+            transport: "Көлік",
+            education: "Оқу",
+            entertainment: "Ойын-сауық",
+            health: "Денсаулық",
+          },
         },
       };
 
@@ -502,6 +543,7 @@
         expenseLabelText.textContent = t.expenses;
         titleFieldLabel.textContent = t.titleField;
         amountFieldLabel.textContent = t.amountField;
+        categoryFieldLabel.textContent = t.categoryField;
         typeFieldLabel.textContent = t.typeField;
         typeToggleLabel.textContent = t.typeToggle;
         incomeBtn.textContent = t.incomeBtn;
@@ -509,6 +551,16 @@
         addBtn.textContent = t.addBtn;
         historyTitle.textContent = t.historyTitle;
         emptyStateText.textContent = t.emptyState;
+
+        // обновить подписи категорий в select
+        const options = categorySelect.options;
+        const names = t.categoryNames;
+        for (let i = 0; i < options.length; i++) {
+          const val = options[i].value;
+          if (names[val]) {
+            options[i].textContent = names[val];
+          }
+        }
       }
 
       function loadFromStorage() {
@@ -553,13 +605,16 @@
         settings.language = lang;
         saveSettings();
         applyLanguage(lang);
-        render(); // чтобы пересчитать текст для countLabel
+        render();
       });
 
       addBtn.addEventListener("click", () => {
-        const t = translations[settings.language] || translations.en;
+        const lang = settings.language || "en";
+        const t = translations[lang] || translations.en;
         const title = titleInput.value.trim();
         const amount = Number(amountInput.value);
+        const category = categorySelect.value;
+
         if (!title || !amount) {
           alert(t.alertMissing);
           return;
@@ -571,6 +626,7 @@
           title,
           amount,
           type,
+          category,
           dateString: now.toLocaleDateString(),
           year: now.getFullYear(),
           month: now.getMonth() + 1,
@@ -603,12 +659,15 @@
         } else {
           itemsContainer.innerHTML = "";
           filtered.forEach((t) => {
+            const catName =
+              (tr.categoryNames && tr.categoryNames[t.category]) ||
+              tr.categoryNames.general;
             const div = document.createElement("div");
             div.className = "item";
             div.innerHTML = `
               <div class="item-left">
                 <div class="item-title">${t.title}</div>
-                <div class="item-meta">${t.dateString}</div>
+                <div class="item-meta">${t.dateString} · ${catName}</div>
               </div>
               <div class="item-amount ${
                 t.type === "income" ? "income" : "expense"
