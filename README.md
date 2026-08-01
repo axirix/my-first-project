@@ -1,26 +1,115 @@
 💰 FinTrac
 
-A modern personal finance tracker.
+A modern personal finance tracker
 
-🚀 About
+Track income, expenses, and monthly balance — right in your browser.
 
-FinTrac is a personal finance application that helps users:
+Live Demo
+HTML5
+CSS3
+JavaScript
 
-
-
-
-
-💰 Track income and expenses
-
-
-
-📊 Analyze spending by month
+Open app · Report bug
 
 
 
-🌍 Switch interface language
 
-🌍 Languages
+
+
+
+About
+
+FinTrac helps you manage personal finances in a simple and visual way.
+
+
+
+
+
+
+
+Feature
+
+
+
+Description
+
+
+
+
+
+💰 Income & Expenses
+
+
+
+Add and track all your transactions
+
+
+
+
+
+📊 Monthly reports
+
+
+
+Balance, income and expenses by month
+
+
+
+
+
+🏷 Categories
+
+
+
+Food, transport, education and more
+
+
+
+
+
+🌍 Multi-language
+
+
+
+Russian, Kazakh, English, Turkish
+
+
+
+
+
+🌙 Dark theme
+
+
+
+Clean modern UI
+
+
+
+
+
+💾 Local storage
+
+
+
+Data stays in your browser
+
+
+
+
+
+Languages
+
+
+
+
+
+
+
+Language
+
+
+
+Code
 
 
 
@@ -30,7 +119,19 @@ FinTrac is a personal finance application that helps users:
 
 
 
+ru
+
+
+
+
+
 🇰🇿 Kazakh
+
+
+
+kz
+
+
 
 
 
@@ -38,26 +139,46 @@ FinTrac is a personal finance application that helps users:
 
 
 
+en
+
+
+
+
+
 🇹🇷 Turkish
 
-📌 Status
 
-✅ Version 1.0 — working MVP
-🚧 Goals, charts, AI — planned for future versions
 
-🛣️ Roadmap
-
-✅ Version 1.0 (current)
+tr
 
 
 
 
 
-Modern UI
+Status
 
 
 
-Income & Expenses
+✅ v1.0 — MVP ready
+🚧 Goals, charts & AI — coming in future versions
+
+
+
+
+
+Roadmap
+
+v1.0 — Current
+
+
+
+
+
+Modern UI & dark theme
+
+
+
+Income & expenses
 
 
 
@@ -65,45 +186,39 @@ Categories
 
 
 
-Dark Theme
-
-
-
-Multi-language (RU, KZ, EN, TR)
+4 languages
 
 
 
 Monthly reports
 
-🔜 Version 2.0
+
+
+Delete transactions
+
+v2.0 — Planned
 
 
 
 
 
-Goals
+Savings goals
 
 
 
-Emotional Purchases
+Emotional purchases tracker
 
 
 
-Statistics
+Statistics & charts
 
-
-
-Charts
-
-
-
-🔮 Version 3.0
+v3.0 — Future
 
 
 
 
 
-AI Assistant
+AI financial assistant
 
 
 
@@ -111,37 +226,36 @@ Achievements
 
 
 
-Budget Planner
-
-
-
-🚀 How to run
+Budget planner
 
 
 
 
 
-Download or clone this repository
+How to run
+
+git clone https://github.com/axirix/my-first-project.git
+cd my-first-project
+
+Open index.html in any browser — no install or server needed.
+
+Or try the live demo: https://axirix.github.io/my-first-project/
 
 
 
-Open index.html in any browser
 
 
+Project structure
 
-No server or installation needed
-
-
-
-📁 Project structure
-
-FinTrac/
-├── index.html   # app + styles + logic (all in one file)
+my-first-project/
+├── index.html    # app, styles & logic
 └── README.md
 
 
 
-🛠 Tech stack
+
+
+Tech stack
 
 
 
@@ -155,30 +269,26 @@ CSS3
 
 
 
-JavaScript (Vanilla)
+Vanilla JavaScript
 
 
 
-LocalStorage
+LocalStorage API
 
 
 
-👤 Author
+
+
+Author
 
 Ariana
 
+GitHub
 
 
 
 
-GitHub: @axirix
 
-
-
-Repository: my-first-project
-
-
-
-📄 License
+License
 
 MIT
