@@ -434,6 +434,20 @@
 
       const translations = {
         en: {
+          months: {
+            1: "January",
+            2: "February",
+            3: "March",
+            4: "April",
+            5: "May",
+            6: "June",
+            7: "July",
+            8: "August",
+            9: "September",
+           10: "October",
+           11: "November",
+           12: "December",
+         },
           title: "Finance Tracker",
           subtitle: "Simple tracker for your income & expenses.",
           reportMonth: "Report month",
@@ -466,6 +480,20 @@
           },
         },
         ru: {
+          months: {
+             1: "Январь",
+             2: "Февраль",
+             3: "Март",
+             4: "Апрель",
+             5: "Май",
+             6: "Июнь",
+             7: "Июль",
+             8: "Август",
+             9: "Сентябрь",
+            10: "Октябрь",
+            11: "Ноябрь",
+            12: "Декабрь",
+          },
           title: "Финансовый трекер",
           subtitle: "Простой трекер доходов и расходов.",
           reportMonth: "Отчётный месяц",
@@ -498,6 +526,20 @@
           },
         },
         kz: {
+          months: {
+            1: "Қаңтар",
+            2: "Ақпан",
+            3: "Наурыз",
+            4: "Сәуір",
+            5: "Мамыр",
+            6: "Маусым",
+            7: "Шілде",
+            8: "Тамыз",
+            9: "Қыркүйек",
+           10: "Қазан",
+           11: "Қараша",
+           12: "Желтоқсан",
+         },
           title: "Қаржы трэкері",
           subtitle: "Кіріс пен шығынды бақылауға арналған қарапайым құрал.",
           reportMonth: "Есептік ай",
@@ -559,9 +601,16 @@
           const val = options[i].value;
           if (names[val]) {
             options[i].textContent = names[val];
-          }
-        }
-      }
+            // обновить названия месяцев в select
+const monthOptions = monthSelect.options;
+if (t.months) {
+  for (let i = 0; i < monthOptions.length; i++) {
+    const val = Number(monthOptions[i].value);
+    if (t.months[val]) {
+      monthOptions[i].textContent = t.months[val];
+    }
+  }
+}
 
       function loadFromStorage() {
         try {
