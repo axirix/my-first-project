@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Finance Tracker</title>
+    <title>FinTrac</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FinTrac — personal finance tracker for income and expenses" />
     <style>
       * {
         box-sizing: border-box;
@@ -19,6 +20,7 @@
         justify-content: center;
         background: linear-gradient(135deg, #1b1b2f, #162447, #1f4068);
         color: #fff;
+        padding: 16px;
       }
       .app {
         background: #121520;
@@ -77,7 +79,6 @@
       .lang-select {
         width: 100%;
       }
-
       .summary {
         display: grid;
         grid-template-columns: 1.2fr 1fr 1fr;
@@ -110,7 +111,6 @@
         color: #8c90b0;
         margin-top: 4px;
       }
-
       .form {
         margin-top: 18px;
         background: #181b2b;
@@ -178,7 +178,6 @@
         background: rgba(255, 107, 129, 0.15);
         color: #ff6b81;
       }
-
       .actions {
         display: flex;
         justify-content: flex-end;
@@ -194,7 +193,6 @@
         background: linear-gradient(135deg, #4c9aff, #7c5cff);
         color: #fff;
       }
-
       .list {
         margin-top: 18px;
       }
@@ -219,6 +217,8 @@
       .item {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        gap: 8px;
         padding: 8px 4px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       }
@@ -236,11 +236,23 @@
       .item-amount {
         font-size: 13px;
         font-weight: 500;
+        white-space: nowrap;
       }
       .item-amount.income {
         color: #3ad29f;
       }
       .item-amount.expense {
+        color: #ff6b81;
+      }
+      .btn-delete {
+        border: none;
+        background: transparent;
+        color: #8c90b0;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 2px 4px;
+      }
+      .btn-delete:hover {
         color: #ff6b81;
       }
       .empty-state {
@@ -249,13 +261,27 @@
         text-align: center;
         padding: 10px 4px;
       }
+      @media (max-width: 560px) {
+        .top-bar {
+          flex-direction: column;
+        }
+        .right-panel {
+          min-width: 0;
+        }
+        .summary {
+          grid-template-columns: 1fr;
+        }
+        .form-row {
+          flex-direction: column;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="app">
       <div class="top-bar">
         <div>
-          <div id="titleText" class="app-title">Finance Tracker</div>
+          <div id="titleText" class="app-title">FinTrac</div>
           <div id="subtitleText" class="app-subtitle">
             Simple tracker for your income & expenses.
           </div>
@@ -292,6 +318,7 @@
                 <option value="en">English</option>
                 <option value="ru">Русский</option>
                 <option value="kz">Қазақ</option>
+                <option value="tr">Türkçe</option>
               </select>
             </div>
           </div>
@@ -331,7 +358,7 @@
         <div class="form-row">
           <div class="field">
             <label id="amountFieldLabel">Amount</label>
-            <input id="amountInput" type="number" placeholder="0" />
+            <input id="amountInput" type="number" min="1" placeholder="0" />
           </div>
           <div class="field">
             <label id="categoryFieldLabel">Category</label>
@@ -351,18 +378,10 @@
                 Income / Expense
               </span>
               <div class="type-buttons">
-                <button
-                  type="button"
-                  class="type-btn active income"
-                  id="incomeBtn"
-                >
+                <button type="button" class="type-btn active income" id="incomeBtn">
                   Income
                 </button>
-                <button
-                  type="button"
-                  class="type-btn expense"
-                  id="expenseBtn"
-                >
+                <button type="button" class="type-btn expense" id="expenseBtn">
                   Expense
                 </button>
               </div>
@@ -391,8 +410,8 @@
     </div>
 
     <script>
-      const STORAGE_KEY = "finance-tracker-transactions";
-      const SETTINGS_KEY = "finance-tracker-settings";
+      const STORAGE_KEY = "fintrac-transactions";
+      const SETTINGS_KEY = "fintrac-settings";
 
       const titleInput = document.getElementById("titleInput");
       const amountInput = document.getElementById("amountInput");
@@ -409,7 +428,6 @@
       const yearSelect = document.getElementById("yearSelect");
       const languageSelect = document.getElementById("languageSelect");
 
-      // UI text elements
       const titleText = document.getElementById("titleText");
       const subtitleText = document.getElementById("subtitleText");
       const monthPanelLabel = document.getElementById("monthPanelLabel");
@@ -428,27 +446,16 @@
 
       let type = "income";
       let transactions = [];
-      let settings = {
-        language: "en",
-      };
+      let settings = { language: "en" };
 
       const translations = {
         en: {
           months: {
-            1: "January",
-            2: "February",
-            3: "March",
-            4: "April",
-            5: "May",
-            6: "June",
-            7: "July",
-            8: "August",
-            9: "September",
-           10: "October",
-           11: "November",
-           12: "December",
-         },
-          title: "Finance Tracker",
+            1: "January", 2: "February", 3: "March", 4: "April",
+            5: "May", 6: "June", 7: "July", 8: "August",
+            9: "September", 10: "October", 11: "November", 12: "December",
+          },
+          title: "FinTrac",
           subtitle: "Simple tracker for your income & expenses.",
           reportMonth: "Report month",
           language: "Language",
@@ -470,6 +477,7 @@
           itemsMany: "items",
           emptyState: "No records yet. Add your first income or expense.",
           alertMissing: "Please enter title and amount.",
+          deleteBtn: "Delete",
           categoryNames: {
             general: "General",
             food: "Food",
@@ -481,20 +489,11 @@
         },
         ru: {
           months: {
-             1: "Январь",
-             2: "Февраль",
-             3: "Март",
-             4: "Апрель",
-             5: "Май",
-             6: "Июнь",
-             7: "Июль",
-             8: "Август",
-             9: "Сентябрь",
-            10: "Октябрь",
-            11: "Ноябрь",
-            12: "Декабрь",
+            1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель",
+            5: "Май", 6: "Июнь", 7: "Июль", 8: "Август",
+            9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь",
           },
-          title: "Финансовый трекер",
+          title: "FinTrac",
           subtitle: "Простой трекер доходов и расходов.",
           reportMonth: "Отчётный месяц",
           language: "Язык",
@@ -516,6 +515,7 @@
           itemsMany: "операций",
           emptyState: "Пока нет записей. Добавьте первую операцию.",
           alertMissing: "Введите название и сумму.",
+          deleteBtn: "Удалить",
           categoryNames: {
             general: "Общее",
             food: "Еда",
@@ -527,20 +527,11 @@
         },
         kz: {
           months: {
-            1: "Қаңтар",
-            2: "Ақпан",
-            3: "Наурыз",
-            4: "Сәуір",
-            5: "Мамыр",
-            6: "Маусым",
-            7: "Шілде",
-            8: "Тамыз",
-            9: "Қыркүйек",
-           10: "Қазан",
-           11: "Қараша",
-           12: "Желтоқсан",
-         },
-          title: "Қаржы трэкері",
+            1: "Қаңтар", 2: "Ақпан", 3: "Наурыз", 4: "Сәуір",
+            5: "Мамыр", 6: "Маусым", 7: "Шілде", 8: "Тамыз",
+            9: "Қыркүйек", 10: "Қазан", 11: "Қараша", 12: "Желтоқсан",
+          },
+          title: "FinTrac",
           subtitle: "Кіріс пен шығынды бақылауға арналған қарапайым құрал.",
           reportMonth: "Есептік ай",
           language: "Тіл",
@@ -562,6 +553,7 @@
           itemsMany: "операция",
           emptyState: "Әзірге жазбалар жоқ. Бірінші операцияны қосыңыз.",
           alertMissing: "Атауды және соманы енгізіңіз.",
+          deleteBtn: "Жою",
           categoryNames: {
             general: "Жалпы",
             food: "Тамақ",
@@ -571,10 +563,54 @@
             health: "Денсаулық",
           },
         },
+        tr: {
+          months: {
+            1: "Ocak", 2: "Şubat", 3: "Mart", 4: "Nisan",
+            5: "Mayıs", 6: "Haziran", 7: "Temmuz", 8: "Ağustos",
+            9: "Eylül", 10: "Ekim", 11: "Kasım", 12: "Aralık",
+          },
+          title: "FinTrac",
+          subtitle: "Gelir ve giderleriniz için basit bir takip aracı.",
+          reportMonth: "Rapor ayı",
+          language: "Dil",
+          balance: "Bakiye",
+          balanceBadge: "Gelir − Gider (seçili ay)",
+          income: "Gelir",
+          expenses: "Gider",
+          titleField: "Başlık",
+          amountField: "Tutar",
+          categoryField: "Kategori",
+          typeField: "Tür",
+          typeToggle: "Gelir / Gider",
+          incomeBtn: "Gelir",
+          expenseBtn: "Gider",
+          addBtn: "Ekle",
+          historyTitle: "Geçmiş (seçili ay)",
+          itemsZero: "0 kayıt",
+          itemsOne: "1 kayıt",
+          itemsMany: "kayıt",
+          emptyState: "Henüz kayıt yok. İlk gelir veya giderinizi ekleyin.",
+          alertMissing: "Lütfen başlık ve tutar girin.",
+          deleteBtn: "Sil",
+          categoryNames: {
+            general: "Genel",
+            food: "Yemek",
+            transport: "Ulaşım",
+            education: "Eğitim",
+            entertainment: "Eğlence",
+            health: "Sağlık",
+          },
+        },
       };
 
+      function getTranslation() {
+        return translations[settings.language] || translations.en;
+      }
+
       function applyLanguage(lang) {
-        const t = translations[lang] || translations.en;
+        settings.language = lang;
+        const t = getTranslation();
+
         titleText.textContent = t.title;
         subtitleText.textContent = t.subtitle;
         monthPanelLabel.textContent = t.reportMonth;
@@ -594,37 +630,35 @@
         historyTitle.textContent = t.historyTitle;
         emptyStateText.textContent = t.emptyState;
 
-        // обновить подписи категорий в select
-        const options = categorySelect.options;
-        const names = t.categoryNames;
-        for (let i = 0; i < options.length; i++) {
-          const val = options[i].value;
-          if (names[val]) {
-            options[i].textContent = names[val];
-            // обновить названия месяцев в select
-const monthOptions = monthSelect.options;
-if (t.months) {
-  for (let i = 0; i < monthOptions.length; i++) {
-    const val = Number(monthOptions[i].value);
-    if (t.months[val]) {
-      monthOptions[i].textContent = t.months[val];
-    }
-  }
-}
+        for (const option of categorySelect.options) {
+          if (t.categoryNames[option.value]) {
+            option.textContent = t.categoryNames[option.value];
+          }
+        }
+
+        for (const option of monthSelect.options) {
+          const monthNumber = Number(option.value);
+          if (t.months[monthNumber]) {
+            option.textContent = t.months[monthNumber];
+          }
+        }
+      }
 
       function loadFromStorage() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) transactions = JSON.parse(raw);
-        } catch (e) {
+          transactions = raw ? JSON.parse(raw) : [];
+        } catch {
           transactions = [];
         }
+
         try {
           const rawSettings = localStorage.getItem(SETTINGS_KEY);
-          if (rawSettings) settings = JSON.parse(rawSettings);
-        } catch (e) {
+          settings = rawSettings ? JSON.parse(rawSettings) : { language: "en" };
+        } catch {
           settings = { language: "en" };
         }
+
         languageSelect.value = settings.language || "en";
         applyLanguage(languageSelect.value);
       }
@@ -635,6 +669,12 @@ if (t.months) {
 
       function saveSettings() {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      }
+
+      function deleteTransaction(id) {
+        transactions = transactions.filter((item) => item.id !== id);
+        saveToStorage();
+        render();
       }
 
       incomeBtn.addEventListener("click", () => {
@@ -650,27 +690,24 @@ if (t.months) {
       });
 
       languageSelect.addEventListener("change", () => {
-        const lang = languageSelect.value;
-        settings.language = lang;
+        applyLanguage(languageSelect.value);
         saveSettings();
-        applyLanguage(lang);
         render();
       });
 
       addBtn.addEventListener("click", () => {
-        const lang = settings.language || "en";
-        const t = translations[lang] || translations.en;
+        const t = getTranslation();
         const title = titleInput.value.trim();
         const amount = Number(amountInput.value);
         const category = categorySelect.value;
 
-        if (!title || !amount) {
+        if (!title || !amount || amount <= 0) {
           alert(t.alertMissing);
           return;
         }
 
         const now = new Date();
-        const transaction = {
+        transactions.unshift({
           id: Date.now(),
           title,
           amount,
@@ -679,11 +716,9 @@ if (t.months) {
           dateString: now.toLocaleDateString(),
           year: now.getFullYear(),
           month: now.getMonth() + 1,
-        };
+        });
 
-        transactions.unshift(transaction);
         saveToStorage();
-
         titleInput.value = "";
         amountInput.value = "";
         render();
@@ -696,60 +731,62 @@ if (t.months) {
         const selectedMonth = Number(monthSelect.value);
         const selectedYear = Number(yearSelect.value);
         const filtered = transactions.filter(
-          (t) => t.year === selectedYear && t.month === selectedMonth
+          (item) => item.year === selectedYear && item.month === selectedMonth
         );
 
-        const lang = settings.language || "en";
-        const tr = translations[lang] || translations.en;
+        const t = getTranslation();
 
         if (filtered.length === 0) {
           itemsContainer.innerHTML =
-            '<div class="empty-state">' + tr.emptyState + "</div>";
+            '<div class="empty-state">' + t.emptyState + "</div>";
         } else {
-          itemsContainer.innerHTML = "";
-          filtered.forEach((t) => {
-            const catName =
-              (tr.categoryNames && tr.categoryNames[t.category]) ||
-              tr.categoryNames.general;
-            const div = document.createElement("div");
-            div.className = "item";
-            div.innerHTML = `
-              <div class="item-left">
-                <div class="item-title">${t.title}</div>
-                <div class="item-meta">${t.dateString} · ${catName}</div>
-              </div>
-              <div class="item-amount ${
-                t.type === "income" ? "income" : "expense"
-              }">
-                ${t.type === "income" ? "+" : "-"} ${t.amount} ₸
-              </div>
-            `;
-            itemsContainer.appendChild(div);
+          itemsContainer.innerHTML = filtered
+            .map((item) => {
+              const catName =
+                t.categoryNames[item.category] || t.categoryNames.general;
+              const sign = item.type === "income" ? "+" : "−";
+              const amountClass = item.type === "income" ? "income" : "expense";
+
+              return `
+                <div class="item">
+                  <div class="item-left">
+                    <div class="item-title">${item.title}</div>
+                    <div class="item-meta">${item.dateString} · ${catName}</div>
+                  </div>
+                  <div class="item-amount ${amountClass}">${sign} ${item.amount} ₸</div>
+                  <button type="button" class="btn-delete" data-id="${item.id}" title="${t.deleteBtn}">×</button>
+                </div>
+              `;
+            })
+            .join("");
+
+          itemsContainer.querySelectorAll(".btn-delete").forEach((button) => {
+            button.addEventListener("click", () => {
+              deleteTransaction(Number(button.dataset.id));
+            });
           });
         }
 
         const incomeTotal = filtered
-          .filter((t) => t.type === "income")
-          .reduce((sum, t) => sum + t.amount, 0);
+          .filter((item) => item.type === "income")
+          .reduce((sum, item) => sum + item.amount, 0);
         const expenseTotal = filtered
-          .filter((t) => t.type === "expense")
-          .reduce((sum, t) => sum + t.amount, 0);
-        const balance = incomeTotal - expenseTotal;
+          .filter((item) => item.type === "expense")
+          .reduce((sum, item) => sum + item.amount, 0);
 
         incomeEl.textContent = `${incomeTotal} ₸`;
         expenseEl.textContent = `${expenseTotal} ₸`;
-        balanceEl.textContent = `${balance} ₸`;
+        balanceEl.textContent = `${incomeTotal - expenseTotal} ₸`;
 
         if (filtered.length === 0) {
-          countLabel.textContent = tr.itemsZero;
+          countLabel.textContent = t.itemsZero;
         } else if (filtered.length === 1) {
-          countLabel.textContent = tr.itemsOne;
+          countLabel.textContent = t.itemsOne;
         } else {
-          countLabel.textContent = `${filtered.length} ${tr.itemsMany}`;
+          countLabel.textContent = `${filtered.length} ${t.itemsMany}`;
         }
       }
 
-      // init
       loadFromStorage();
       const now = new Date();
       monthSelect.value = String(now.getMonth() + 1);
