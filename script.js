@@ -1,3 +1,1 @@
-// FinTrac JavaScript
-
-console.log("FinTrac loaded 🚀");
+document.body.style.border = "5px solid lime";
